@@ -3,899 +3,745 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <title>EchoVault</title>
-  <meta name="description" content="EchoVault — Every artifact tells a story. Discover them all." />
-  <meta name="robots" content="index, follow" />
+  <title>EchoVault — Every artifact tells a story.</title>
+  <meta name="description" content="EchoVault — A cinematic artifact hunt. Eight objects. One room. Collect every echo before the vault closes." />
   <meta property="og:title" content="EchoVault" />
-  <meta property="og:description" content="EchoVault — Every artifact tells a story. Discover them all." />
+  <meta property="og:description" content="Eight artifacts. One room. Collect every echo." />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="EchoVault" />
-  <meta name="twitter:description" content="EchoVault — Every artifact tells a story. Discover them all." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Barlow+Condensed:wght@800&family=Barlow:wght@400&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Barlow+Condensed:wght@400;800&family=Barlow:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
+    /* ══════════════════════════════════════════
+       DESIGN TOKENS
+    ══════════════════════════════════════════ */
     :root {
-      --void: #080808;
-      --ash: #1A1A1A;
-      --ember: #E8001C;
-      --rust: #8B1A1A;
-      --parchment: #F0EBE1;
-      --amber: #C8922A;
-      --smoke: #2D2D2D;
-      --ghost: rgba(240,235,225,0.06);
+      --void:     #080808;
+      --ash:      #111111;
+      --ash2:     #1A1A1A;
+      --ember:    #E8001C;
+      --rust:     #8B1A1A;
+      --parchment:#F0EBE1;
+      --amber:    #C8922A;
+      --amber-dim:rgba(200,146,42,0.12);
+      --smoke:    #2D2D2D;
+      --ghost:    rgba(240,235,225,0.05);
+      --header-h: 54px;
     }
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body {
-      width: 100%;
-      height: 100%;
+      width: 100%; height: 100%;
       background: var(--void);
       color: var(--parchment);
       overflow: hidden;
-      font-family: 'Barlow', sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ─── PROGRESS BAR ─────────────────────────────────────── */
-    #progress-bar-wrap {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background: var(--smoke);
-      z-index: 300;
+    /* ══════════════════════════════════════════
+       PROGRESS BAR
+    ══════════════════════════════════════════ */
+    #progress-track {
+      position: fixed; top: 0; left: 0; width: 100%; height: 2px;
+      background: rgba(255,255,255,0.04); z-index: 500;
     }
-    #progress-bar {
-      height: 100%;
-      width: 0%;
+    #progress-fill {
+      height: 100%; width: 0%;
       background: var(--ember);
-      transition: width 0.6s ease;
-      box-shadow: 0 0 6px var(--ember);
+      transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 8px rgba(232,0,28,0.7);
     }
 
-    /* ─── HEADER ────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       HEADER
+    ══════════════════════════════════════════ */
     #header {
-      position: fixed;
-      top: 2px;
-      left: 0;
-      width: 100%;
-      height: 52px;
-      background: rgba(8,8,8,0.95);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--ash);
-      display: flex;
-      align-items: center;
+      position: fixed; top: 2px; left: 0; width: 100%;
+      height: var(--header-h);
+      background: rgba(8,8,8,0.97);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex; align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
-      z-index: 200;
+      padding: 0 18px; z-index: 200;
     }
-
     #logo {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
+      display: flex; flex-direction: column; gap: 2px;
+      user-select: none;
     }
-    #logo-wordmark {
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      line-height: 1;
+    #logo-word {
+      display: flex; align-items: baseline; gap: 3px; line-height: 1;
     }
     #logo-echo {
       font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 22px;
-      color: var(--parchment);
-      letter-spacing: 0.06em;
+      font-style: italic; font-size: 21px;
+      color: var(--parchment); letter-spacing: 0.05em;
     }
     #logo-vault {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 22px;
-      color: var(--ember);
-      letter-spacing: -0.02em;
+      font-weight: 800; font-size: 21px;
+      color: var(--ember); letter-spacing: -0.02em;
     }
-    #logo-url {
+    #logo-sub {
       font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      color: #555;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding-left: 2px;
+      font-size: 8.5px; color: #3a3a3a;
+      letter-spacing: 0.22em; text-transform: uppercase;
     }
-
     #header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      display: flex; align-items: center; gap: 14px;
     }
-
     #echo-counter {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--parchment);
-      letter-spacing: 0.05em;
-      transition: transform 0.3s ease;
+      font-size: 11px; color: var(--parchment);
+      letter-spacing: 0.08em;
     }
-    #echo-counter.pulse {
-      animation: counter-pulse 0.3s ease forwards;
-    }
-    @keyframes counter-pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.15); }
+    #echo-counter.pulse { animation: counter-pop 0.35s ease forwards; }
+    @keyframes counter-pop {
+      0%   { transform: scale(1); }
+      45%  { transform: scale(1.18); color: var(--ember); }
       100% { transform: scale(1); }
     }
-
-    #wallet-btn {
+    #session-info {
       font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: #666;
-      border: 1px solid var(--smoke);
-      background: transparent;
-      padding: 6px 12px;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: color 0.2s ease, border-color 0.2s ease;
-      white-space: nowrap;
+      font-size: 9px; color: #444;
+      letter-spacing: 0.12em;
+      display: none;
     }
-    #wallet-btn:hover {
-      color: var(--parchment);
-      border-color: #555;
-    }
-    #wallet-btn.connected {
-      color: var(--amber);
-      border-color: var(--amber);
-    }
-
-    @media (max-width: 374px) {
-      #wallet-btn { display: none; }
-    }
-
+    @media (min-width: 640px) { #session-info { display: block; } }
     @media (min-width: 768px) {
-      #header { height: 60px; padding: 0 24px; }
-      #logo-echo { font-size: 26px; }
-      #logo-vault { font-size: 26px; }
+      #header { height: 60px; padding: 0 28px; }
+      :root { --header-h: 60px; }
+      #logo-echo, #logo-vault { font-size: 24px; }
     }
 
-    /* ─── INTRO ─────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       INTRO
+    ══════════════════════════════════════════ */
     #intro {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: var(--void);
-      z-index: 500;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      z-index: 600;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       overflow: hidden;
     }
-
-    #intro-line {
-      position: absolute;
-      top: 50%;
-      left: 0;
-      height: 1px;
-      width: 0%;
-      background: var(--ember);
+    #intro-scan {
+      position: absolute; top: 50%; left: 0;
+      width: 0%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ember), transparent);
       transform: translateY(-50%);
+      pointer-events: none;
     }
-
-    #intro-content {
+    #intro-wrap {
       position: relative;
       text-align: center;
-      padding: 32px 24px;
+      padding: 36px 28px 28px;
       opacity: 0;
     }
-
-    #intro-headline {
+    #intro-border {
+      position: absolute; inset: 0;
+      border: 1px solid rgba(232,0,28,0.5);
+      opacity: 0; transition: opacity 0.6s ease;
+      pointer-events: none;
+    }
+    #intro-border.on { opacity: 1; }
+    #intro-hl {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
-      font-size: 72px;
+      font-size: clamp(60px, 14vw, 120px);
       color: var(--parchment);
-      letter-spacing: 0.04em;
-      line-height: 1;
+      letter-spacing: 0.02em;
+      line-height: 0.95;
       text-transform: uppercase;
     }
-    #intro-headline span {
+    #intro-hl span {
       display: inline-block;
       opacity: 0;
-      transform: translateY(8px);
-      transition: opacity 0.2s ease, transform 0.2s ease;
+      transform: translateY(10px);
+      transition: opacity 0.18s ease, transform 0.18s ease;
     }
-    #intro-headline span.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    #intro-sub {
+    #intro-hl span.on { opacity: 1; transform: translateY(0); }
+    #intro-tagline {
       font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: var(--parchment);
-      opacity: 0;
-      letter-spacing: 0.05em;
-      margin-top: 20px;
-      transition: opacity 0.5s ease;
+      font-size: 11px; color: var(--parchment);
+      letter-spacing: 0.08em;
+      margin-top: 22px;
+      opacity: 0; transition: opacity 0.6s ease;
     }
-    #intro-sub.visible {
-      opacity: 0.55;
+    #intro-tagline.on { opacity: 0.45; }
+    #intro-year {
+      font-family: 'DM Mono', monospace;
+      font-size: 9px; color: #444;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      margin-top: 6px;
+      opacity: 0; transition: opacity 0.5s ease 0.2s;
     }
-
-    #intro-box {
-      position: absolute;
-      inset: 0;
-      border: 1px solid var(--ember);
-      opacity: 0;
-      transition: opacity 0.5s ease;
-      pointer-events: none;
-    }
-    #intro-box.visible {
-      opacity: 0.6;
-    }
-
+    #intro-year.on { opacity: 1; }
     #intro-skip {
-      position: absolute;
-      bottom: 24px;
-      right: 20px;
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: rgba(240,235,225,0.4);
-      background: none;
-      border: none;
-      cursor: pointer;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      position: absolute; bottom: 22px; right: 20px;
+      font-family: 'DM Mono', monospace; font-size: 9px;
+      color: #3a3a3a; background: none; border: none;
+      cursor: pointer; letter-spacing: 0.18em; text-transform: uppercase;
       transition: color 0.2s ease;
     }
-    #intro-skip:hover {
-      color: var(--parchment);
-    }
+    #intro-skip:hover { color: var(--parchment); }
 
-    @media (min-width: 768px) {
-      #intro-headline { font-size: 120px; }
-    }
-
-    /* ─── ROOM ──────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       ROOM
+    ══════════════════════════════════════════ */
     #room {
       position: fixed;
-      top: 54px;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      top: calc(var(--header-h) + 2px);
+      left: 0; right: 0; bottom: 0;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 1s ease;
       overflow: hidden;
     }
-    #room.visible { opacity: 1; }
+    #room.on { opacity: 1; }
 
     /* wallpaper */
-    #room-bg {
-      position: absolute;
-      inset: 0;
-      background-color: #0F0F0F;
-      background-image: radial-gradient(circle, #1A1A1A 1px, transparent 1px);
-      background-size: 20px 20px;
+    #wall {
+      position: absolute; inset: 0;
+      background-color: #0D0D0D;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.025) 1px, transparent 1px),
+        radial-gradient(circle, rgba(255,255,255,0.012) 1px, transparent 1px);
+      background-size: 28px 28px, 14px 14px;
+      background-position: 0 0, 7px 7px;
       z-index: 0;
     }
-
-    /* ambient light */
-    #room-light {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(200,146,42,0.08) 0%, transparent 60%);
-      z-index: 1;
+    /* subtle vignette */
+    #wall::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%);
       pointer-events: none;
     }
-
-    /* floor */
-    #room-floor {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 25%;
-      background: linear-gradient(to bottom, #0A0A0A 0%, #050505 100%);
-      transform: skewX(0deg);
-      z-index: 2;
+    /* ambient warm light from above */
+    #light {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 55% at 48% 0%, rgba(200,146,42,0.11) 0%, transparent 60%);
+      z-index: 1; pointer-events: none;
     }
-    #room-baseboard {
-      position: absolute;
-      bottom: 25%;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--smoke);
+    /* secondary cool-shadow at bottom corners */
+    #shadow-l, #shadow-r {
+      position: absolute; bottom: 0; width: 30%; height: 60%;
+      z-index: 2; pointer-events: none;
+    }
+    #shadow-l { left: 0; background: linear-gradient(to right, rgba(0,0,0,0.4), transparent); }
+    #shadow-r { right: 0; background: linear-gradient(to left, rgba(0,0,0,0.4), transparent); }
+    /* floor */
+    #floor {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 26%;
+      background: linear-gradient(to bottom, #0C0C0C 0%, #060606 100%);
       z-index: 3;
     }
-
-    /* hint text */
-    #hint {
-      position: absolute;
-      bottom: 28%;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: 'DM Mono', monospace;
-      font-size: 9px;
-      color: rgba(240,235,225,0.25);
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      z-index: 10;
-      animation: hint-pulse 4s ease-in-out infinite;
+    #baseboard {
+      position: absolute; bottom: 26%; left: 0; right: 0; height: 2px;
+      background: var(--smoke); z-index: 4;
     }
-    @keyframes hint-pulse {
-      0%, 100% { opacity: 0.25; }
-      50% { opacity: 0.55; }
-    }
-
-    /* ─── OBJECTS (shared) ──────────────────────────────────── */
-    .object {
-      position: absolute;
-      cursor: crosshair;
-      opacity: 0.75;
-      transition: opacity 0.2s ease, transform 0.2s ease, filter 0.2s ease;
-      z-index: 5;
-    }
-    .object:hover {
-      opacity: 1;
-      filter: drop-shadow(0 0 12px var(--ember));
-      transform: scale(1.06);
-    }
-    .object.found {
-      opacity: 0.3;
-      filter: grayscale(1);
-      pointer-events: none;
-      cursor: default;
-    }
-    .object .obj-label {
-      display: block;
-      font-family: 'DM Mono', monospace;
-      font-size: 8px;
-      color: rgba(240,235,225,0.45);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-align: center;
-      margin-top: 6px;
-      white-space: nowrap;
-    }
-
-    /* 1 — ROUND MIRROR */
-    #obj-mirror {
-      top: 12%;
-      left: 60%;
-      animation: float 3s ease-in-out infinite;
-    }
-    .mirror-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      border: 3px solid var(--amber);
-      background: radial-gradient(circle at 40% 35%, rgba(200,146,42,0.18) 0%, #0a0a0a 65%);
-      position: relative;
-      overflow: hidden;
-    }
-    .mirror-circle::after {
+    /* baseboard ambient glow */
+    #baseboard::after {
       content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(200,146,42,0.18) 0%, transparent 40%, rgba(200,146,42,0.08) 80%);
-      animation: shimmer 5s ease-in-out infinite;
+      position: absolute; inset: 0;
+      box-shadow: 0 1px 12px rgba(200,146,42,0.04);
     }
-    @keyframes shimmer {
-      0%, 100% { opacity: 0.4; }
+
+    /* hint */
+    #hint {
+      position: absolute; bottom: 27%; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace; font-size: 8.5px;
+      color: rgba(240,235,225,0.18); letter-spacing: 0.28em;
+      text-transform: uppercase; white-space: nowrap;
+      z-index: 10;
+      animation: hint-breathe 5s ease-in-out infinite;
+    }
+    @keyframes hint-breathe {
+      0%, 100% { opacity: 0.5; }
       50% { opacity: 1; }
     }
 
-    /* 2 — VANITY TABLE */
-    #obj-vanity {
-      top: 52%;
-      left: 5%;
+    /* ══════════════════════════════════════════
+       OBJECTS — shared
+    ══════════════════════════════════════════ */
+    .obj {
+      position: absolute; z-index: 8;
+      cursor: crosshair;
+      opacity: 0.72;
+      transition: opacity 0.22s ease, transform 0.22s ease, filter 0.22s ease;
+      transform-origin: center bottom;
+      display: flex; flex-direction: column; align-items: center; gap: 7px;
     }
-    .vanity-body {
-      width: 140px;
-      height: 60px;
-      background: #1C1008;
-      border-top: 2px solid var(--amber);
-      position: relative;
+    .obj:hover {
+      opacity: 1;
+      filter: drop-shadow(0 0 14px rgba(232,0,28,0.5));
+      transform: scale(1.07);
+      z-index: 15;
     }
-    .vanity-body::before {
+    .obj.found {
+      opacity: 0.22; filter: grayscale(1) brightness(0.5);
+      pointer-events: none;
+      transition: opacity 0.8s ease, filter 0.8s ease;
+    }
+    .obj-name {
+      font-family: 'DM Mono', monospace; font-size: 7.5px;
+      color: rgba(240,235,225,0.35); letter-spacing: 0.2em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+
+    /* ── 1. ROUND MIRROR ─────────────── */
+    #obj-mirror { top: 9%; left: 58%; animation: float-slow 3.2s ease-in-out infinite; }
+    .mirror {
+      width: 82px; height: 82px; border-radius: 50%;
+      border: 3px solid var(--amber);
+      background: radial-gradient(circle at 38% 35%, rgba(200,146,42,0.2) 0%, #070707 60%);
+      position: relative; overflow: hidden;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 0 0 1px rgba(200,146,42,0.1);
+    }
+    .mirror::before {
       content: '';
-      position: absolute;
-      top: -10px;
-      left: 16px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(200,146,42,0.5);
-      box-shadow: 20px 0 0 rgba(200,146,42,0.4), 40px 0 0 rgba(200,146,42,0.35), 60px 0 0 rgba(200,146,42,0.3);
+      position: absolute; top: 8%; left: 20%; width: 18px; height: 48%;
+      background: linear-gradient(135deg, rgba(200,146,42,0.25), transparent);
+      border-radius: 40%;
+      transform: rotate(20deg);
+      animation: mirror-shimmer 4s ease-in-out infinite;
+    }
+    .mirror::after {
+      content: '';
+      position: absolute; inset: 0; border-radius: 50%;
+      background: radial-gradient(circle at 65% 30%, rgba(240,235,225,0.06) 0%, transparent 50%);
+    }
+    @keyframes mirror-shimmer { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+    /* ── 2. VANITY TABLE ─────────────── */
+    #obj-vanity { top: 50%; left: 4%; }
+    .vanity {
+      width: 145px; position: relative;
+    }
+    .vanity-top {
+      height: 8px; width: 100%;
+      background: linear-gradient(to bottom, #2a1e0c, #1C1008);
+      border-top: 2px solid var(--amber);
+      box-shadow: 0 -3px 12px rgba(200,146,42,0.15);
+    }
+    .vanity-surface {
+      height: 48px; width: 100%; background: #160f05;
+      border-left: 1px solid #2a1e0c; border-right: 1px solid #2a1e0c;
+      position: relative; overflow: hidden;
+    }
+    .vanity-surface::before {
+      content: '';
+      position: absolute; top: 6px; left: 14px;
+      width: 6px; height: 28px; background: rgba(200,146,42,0.35); border-radius: 3px;
+      box-shadow: 16px 0 0 rgba(200,146,42,0.28), 32px 0 0 rgba(200,146,42,0.22),
+                  48px 0 0 rgba(200,146,42,0.18), 64px 0 0 rgba(200,146,42,0.14),
+                  80px 0 0 rgba(200,146,42,0.1);
+    }
+    .vanity-surface::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(200,146,42,0.06), transparent);
     }
     .vanity-legs {
-      display: flex;
-      justify-content: space-between;
-      padding: 0 12px;
+      display: flex; justify-content: space-between; padding: 0 10px;
     }
     .vanity-leg {
-      width: 6px;
-      height: 14px;
-      background: #1C1008;
-      border: 1px solid #2a1a08;
+      width: 7px; height: 18px;
+      background: linear-gradient(to bottom, #1a1008, #100a04);
+      border: 1px solid #2a1e0c;
     }
 
-    /* 3 — LEATHER JACKET */
-    #obj-jacket {
-      top: 18%;
-      left: 8%;
-      animation: sway 4s ease-in-out infinite;
+    /* ── 3. LEATHER JACKET ───────────── */
+    #obj-jacket { top: 16%; left: 7%; animation: sway-slow 4.5s ease-in-out infinite; }
+    .jacket {
+      width: 70px; height: 85px; position: relative;
     }
-    .jacket-shape {
-      width: 68px;
-      height: 80px;
-      background: #111;
-      clip-path: polygon(20% 0%, 80% 0%, 100% 12%, 90% 100%, 10% 100%, 0% 12%);
-      position: relative;
-      box-shadow: inset -6px 0 12px rgba(0,0,0,0.7), inset 6px 0 8px rgba(0,0,0,0.5);
+    .jacket-body {
+      position: absolute; inset: 0;
+      background: #0e0e0e;
+      clip-path: polygon(22% 0%, 78% 0%, 100% 14%, 92% 100%, 8% 100%, 0% 14%);
+      box-shadow: inset -8px 0 16px rgba(0,0,0,0.8), inset 4px 0 8px rgba(255,255,255,0.02);
     }
-    .jacket-shape::before {
+    .jacket-collar-l {
+      position: absolute; top: 0; left: 18%; width: 18%; height: 30%;
+      background: #141414;
+      clip-path: polygon(0 0, 100% 0, 80% 100%, 0 80%);
+    }
+    .jacket-collar-r {
+      position: absolute; top: 0; right: 18%; width: 18%; height: 30%;
+      background: #141414;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 20% 100%);
+    }
+    .jacket-zip {
+      position: absolute; top: 18%; left: 50%; transform: translateX(-50%);
+      width: 2px; height: 52%;
+      background: linear-gradient(to bottom, #2a2a2a, #1a1a1a);
+    }
+    .jacket-zip::after {
       content: '';
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 16px;
-      height: 16px;
-      background: #1a1a1a;
-      clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-    }
-    .jacket-shape::after {
-      content: '';
-      position: absolute;
-      top: 20%;
-      left: 10%;
-      width: 2px;
-      height: 40%;
-      background: rgba(200,146,42,0.2);
-      transform: rotate(-5deg);
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 6px; height: 6px;
+      background: #333; border-radius: 1px;
     }
 
-    /* 4 — VINYL RECORD */
+    /* ── 4. VINYL RECORD ─────────────── */
     #obj-vinyl {
-      top: 60%;
-      left: 68%;
-      animation: spin 8s linear infinite;
+      top: 58%; left: 66%;
+      animation: spin-record 9s linear infinite;
     }
-    #obj-vinyl:hover {
-      animation-play-state: paused;
-    }
-    .vinyl-disc {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: repeating-conic-gradient(#111 0deg 10deg, #1A1A1A 10deg 20deg);
-      border: 1px solid var(--smoke);
+    #obj-vinyl:hover { animation-play-state: paused; }
+    .vinyl {
+      width: 72px; height: 72px; border-radius: 50%;
       position: relative;
+      background: conic-gradient(
+        #0e0e0e 0deg 18deg, #181818 18deg 36deg,
+        #0e0e0e 36deg 54deg, #181818 54deg 72deg,
+        #0e0e0e 72deg 90deg, #181818 90deg 108deg,
+        #0e0e0e 108deg 126deg, #181818 126deg 144deg,
+        #0e0e0e 144deg 162deg, #181818 162deg 180deg,
+        #0e0e0e 180deg 198deg, #181818 198deg 216deg,
+        #0e0e0e 216deg 234deg, #181818 234deg 252deg,
+        #0e0e0e 252deg 270deg, #181818 270deg 288deg,
+        #0e0e0e 288deg 306deg, #181818 306deg 324deg,
+        #0e0e0e 324deg 342deg, #181818 342deg 360deg
+      );
+      box-shadow: 0 0 0 1px #2a2a2a, inset 0 0 10px rgba(0,0,0,0.6);
     }
-    .vinyl-disc::after {
+    .vinyl::before {
       content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      position: absolute; top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: radial-gradient(circle, #8B1A1A 0%, #5a1010 60%, #3a0a0a 100%);
+      box-shadow: 0 0 0 2px #1a1a1a;
+    }
+    .vinyl::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px; height: 8px; border-radius: 50%;
       background: var(--void);
-      border: 1px solid #333;
+      box-shadow: 0 0 0 1px #333;
     }
 
-    /* 5 — SETLIST PAPER */
-    #obj-setlist {
-      top: 30%;
-      left: 72%;
-      animation: paper-sway 5s ease-in-out infinite;
-    }
-    .setlist-paper {
-      width: 55px;
-      height: 75px;
-      background: #1A1508;
+    /* ── 5. SETLIST ──────────────────── */
+    #obj-setlist { top: 28%; left: 70%; animation: paper-float 5.5s ease-in-out infinite; }
+    .setlist {
+      width: 56px; height: 78px;
+      background: #16120a;
       border: 1px solid #3D3520;
-      transform: rotate(-3deg);
-      position: relative;
-      overflow: hidden;
+      transform: rotate(-4deg);
+      position: relative; overflow: hidden;
+      box-shadow: 2px 3px 12px rgba(0,0,0,0.6), inset 0 0 8px rgba(0,0,0,0.4);
     }
-    .setlist-paper::before {
+    .setlist::before {
       content: '';
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background-image: repeating-linear-gradient(
         to bottom,
-        transparent 0px,
-        transparent 9px,
-        rgba(61,53,32,0.6) 9px,
-        rgba(61,53,32,0.6) 10px
+        transparent 0px, transparent 8px,
+        rgba(61,53,32,0.55) 8px, rgba(61,53,32,0.55) 9px
       );
-      background-size: 100% 10px;
     }
-    .setlist-paper::after {
+    .setlist::after {
       content: '';
-      position: absolute;
-      top: 8px;
-      left: 6px;
-      right: 6px;
+      position: absolute; top: 7px; left: 5px; right: 5px;
       height: 2px;
-      background: rgba(200,146,42,0.3);
+      background: linear-gradient(90deg, rgba(200,146,42,0.5), rgba(200,146,42,0.2));
+    }
+    .setlist-line {
+      position: absolute; top: 18px; left: 6px;
+      width: 32px; height: 1px; background: rgba(200,146,42,0.2);
+      box-shadow: 0 10px 0 rgba(200,146,42,0.15), 0 20px 0 rgba(200,146,42,0.12), 0 30px 0 rgba(200,146,42,0.1);
     }
 
-    /* 6 — POLAROID */
-    #obj-polaroid {
-      top: 22%;
-      left: 40%;
-      animation: polaroid-sway 6s ease-in-out infinite;
-    }
-    .polaroid-frame {
-      width: 64px;
-      height: 72px;
-      background: #e8e0d0;
+    /* ── 6. POLAROID ─────────────────── */
+    #obj-polaroid { top: 20%; left: 38%; animation: polaroid-tilt 6.5s ease-in-out infinite; }
+    .polaroid {
+      width: 66px;
+      background: #e8e0d2;
+      padding: 5px 5px 18px 5px;
       transform: rotate(5deg);
-      padding: 5px 5px 16px 5px;
+      box-shadow: 3px 4px 16px rgba(0,0,0,0.7);
       position: relative;
     }
-    .polaroid-inner {
-      width: 100%;
-      height: 42px;
-      background: linear-gradient(145deg, #3a2c20 0%, #2a2018 50%, #3d3028 100%);
-      filter: sepia(0.4) brightness(0.6);
+    .polaroid-img {
+      width: 100%; height: 52px;
+      background: linear-gradient(155deg, #1a0f0a 0%, #0d0705 40%, #2a1a10 70%, #0a0705 100%);
+      position: relative; overflow: hidden;
+    }
+    .polaroid-img::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 40% 40%, rgba(200,146,42,0.15), transparent);
+    }
+    .polaroid-img::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+    .polaroid-text {
+      text-align: center; padding-top: 4px;
+      font-family: 'DM Mono', monospace; font-size: 6px;
+      color: #999; letter-spacing: 0.05em;
     }
 
-    /* 7 — CASSETTE TAPE */
-    #obj-cassette {
-      top: 68%;
-      left: 35%;
-      animation: float 3.5s ease-in-out infinite;
-      animation-delay: 0.5s;
+    /* ── 7. CASSETTE ─────────────────── */
+    #obj-cassette { top: 66%; left: 33%; animation: float-slow 3.8s ease-in-out infinite 0.6s; }
+    .cassette {
+      width: 78px; height: 48px;
+      background: #151515;
+      border: 2px solid #2a2a2a;
+      border-radius: 3px;
+      position: relative; overflow: hidden;
+      box-shadow: 1px 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
     }
-    .cassette-body {
-      width: 75px;
-      height: 45px;
-      background: #1A1A1A;
+    .cassette::before {
+      content: '';
+      position: absolute; top: 7px; left: 7px;
+      width: 20px; height: 20px; border-radius: 50%;
       border: 2px solid #333;
-      position: relative;
-      border-radius: 2px;
+      background: radial-gradient(circle, #0a0a0a 30%, #1a1a1a 100%);
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
     }
-    .cassette-body::before {
+    .cassette::after {
       content: '';
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid #444;
-      background: #0a0a0a;
-    }
-    .cassette-body::after {
-      content: '';
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 2px solid #444;
-      background: #0a0a0a;
+      position: absolute; top: 7px; right: 7px;
+      width: 20px; height: 20px; border-radius: 50%;
+      border: 2px solid #333;
+      background: radial-gradient(circle, #0a0a0a 30%, #1a1a1a 100%);
+      box-shadow: inset 0 0 4px rgba(0,0,0,0.8);
     }
     .cassette-label {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 14px;
-      background: var(--rust);
+      position: absolute; bottom: 0; left: 0; right: 0; height: 16px;
+      background: linear-gradient(90deg, #6a1010, var(--rust), #6a1010);
+      display: flex; align-items: center; justify-content: center;
     }
-
-    /* 8 — STAR DOOR SIGN */
-    #obj-star {
-      top: 42%;
-      left: 82%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      animation: star-pulse 2s ease-in-out infinite;
-    }
-    .star-icon {
-      font-size: 42px;
-      color: var(--ember);
-      line-height: 1;
-      display: block;
-    }
-    .star-label-text {
-      font-family: 'DM Mono', monospace;
-      font-size: 7px;
-      color: rgba(240,235,225,0.4);
-      letter-spacing: 0.15em;
+    .cassette-label-text {
+      font-family: 'DM Mono', monospace; font-size: 5px;
+      color: rgba(240,235,225,0.5); letter-spacing: 0.25em;
       text-transform: uppercase;
-      margin-top: 2px;
     }
 
-    /* ─── OBJECT ANIMATIONS ─────────────────────────────────── */
-    @keyframes float {
-      0%, 100% { transform: translateY(-4px); }
-      50% { transform: translateY(4px); }
+    /* ── 8. STAR SIGN ────────────────── */
+    #obj-star { top: 40%; left: 80%; animation: star-throb 2.2s ease-in-out infinite; }
+    .star-wrap {
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
     }
-    @keyframes sway {
-      0%, 100% { transform: rotate(-1deg); }
-      50% { transform: rotate(1deg); }
+    .star-symbol {
+      font-size: 44px; line-height: 1;
+      color: var(--ember);
+      text-shadow: 0 0 20px rgba(232,0,28,0.3);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
     }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes paper-sway {
-      0%, 100% { transform: rotate(-3deg); }
-      50% { transform: rotate(-1deg); }
-    }
-    @keyframes polaroid-sway {
-      0%, 100% { transform: rotate(4deg); }
-      50% { transform: rotate(6deg); }
-    }
-    @keyframes star-pulse {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; }
+    .star-tag {
+      background: var(--ash2); border: 1px solid var(--smoke);
+      padding: 2px 6px;
+      font-family: 'DM Mono', monospace; font-size: 6.5px;
+      color: rgba(240,235,225,0.5); letter-spacing: 0.22em; text-transform: uppercase;
     }
 
-    /* ─── PARTICLES ─────────────────────────────────────────── */
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: var(--parchment);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 4;
-    }
+    /* ── KEYFRAMES ─────────────────────── */
+    @keyframes float-slow { 0%,100%{transform:translateY(-5px);} 50%{transform:translateY(5px);} }
+    @keyframes sway-slow  { 0%,100%{transform:rotate(-1.2deg);} 50%{transform:rotate(1.2deg);} }
+    @keyframes spin-record{ from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    @keyframes paper-float{ 0%,100%{transform:rotate(-4deg) translateY(-2px);} 50%{transform:rotate(-2deg) translateY(2px);} }
+    @keyframes polaroid-tilt{ 0%,100%{transform:rotate(4deg);} 50%{transform:rotate(6.5deg);} }
+    @keyframes star-throb { 0%,100%{opacity:0.65;} 50%{opacity:1;} }
 
-    /* ─── DESKTOP OBJECT ADJUSTMENTS ────────────────────────── */
+    /* ── DESKTOP POSITIONS ─────────────── */
     @media (min-width: 768px) {
-      #obj-mirror  { top: 10%; left: 62%; }
-      #obj-vanity  { top: 55%; left: 4%; }
-      #obj-jacket  { top: 15%; left: 10%; }
-      #obj-vinyl   { top: 62%; left: 72%; }
-      #obj-setlist { top: 28%; left: 76%; }
-      #obj-polaroid{ top: 20%; left: 42%; }
-      #obj-cassette{ top: 68%; left: 36%; }
-      #obj-star    { top: 40%; left: 84%; }
-      #room { top: 62px; }
+      #obj-mirror  { top: 8%; left: 60%; }
+      #obj-vanity  { top: 52%; left: 3%; }
+      #obj-jacket  { top: 14%; left: 9%; }
+      #obj-vinyl   { top: 60%; left: 70%; }
+      #obj-setlist { top: 26%; left: 74%; }
+      #obj-polaroid{ top: 18%; left: 40%; }
+      #obj-cassette{ top: 65%; left: 34%; }
+      #obj-star    { top: 38%; left: 83%; }
     }
 
-    /* ─── MODAL / BOTTOM SHEET ──────────────────────────────── */
+    /* ── PARTICLES ─────────────────────── */
+    .dust {
+      position: absolute; border-radius: 50%;
+      background: var(--parchment);
+      pointer-events: none; z-index: 5;
+    }
+
+    /* ══════════════════════════════════════════
+       MODAL OVERLAY + SHEET
+    ══════════════════════════════════════════ */
     #overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(8,8,8,0.92);
-      z-index: 100;
-      opacity: 0;
-      pointer-events: none;
+      position: fixed; inset: 0;
+      background: rgba(4,4,4,0.88);
+      z-index: 300; opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
     }
-    #overlay.active {
-      opacity: 1;
-      pointer-events: all;
-    }
+    #overlay.on { opacity: 1; pointer-events: all; }
 
     #sheet {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #0F0F0F;
+      bottom: 0; left: 0; right: 0;
+      background: #0C0C0C;
       border-top: 1px solid var(--smoke);
-      border-radius: 16px 16px 0 0;
-      padding: 20px 24px 32px;
-      z-index: 110;
+      border-radius: 18px 18px 0 0;
+      padding: 18px 22px 32px;
+      z-index: 310;
       transform: translateY(100%);
-      transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+      transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+      box-shadow: 0 -20px 60px rgba(0,0,0,0.8);
     }
-    #sheet.active {
-      transform: translateY(0);
-    }
+    #sheet.on { transform: translateY(0); }
 
-    .sheet-handle {
-      width: 32px;
-      height: 3px;
-      background: #333;
-      border-radius: 2px;
-      margin: 0 auto 24px;
+    .sh-handle {
+      width: 36px; height: 3px;
+      background: #2a2a2a; border-radius: 2px;
+      margin: 0 auto 20px;
     }
-    .sheet-number {
-      font-family: 'DM Mono', monospace;
-      font-size: 10px;
-      color: #555;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .sh-artifact-no {
+      font-family: 'DM Mono', monospace; font-size: 9.5px;
+      color: #444; letter-spacing: 0.24em; text-transform: uppercase;
+      margin-bottom: 6px;
     }
-    .sheet-name {
+    .sh-name {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 36px;
-      color: var(--parchment);
-      text-transform: uppercase;
-      line-height: 1;
+      font-weight: 800; font-size: 38px;
+      color: var(--parchment); text-transform: uppercase; line-height: 0.95;
+      margin-bottom: 18px;
+    }
+    .sh-rule {
+      height: 1px; background: var(--smoke);
       margin-bottom: 16px;
     }
-    .sheet-divider {
-      height: 1px;
-      background: var(--smoke);
-      margin: 0 0 16px;
-    }
-    .sheet-text {
+    .sh-text {
       font-family: 'Barlow', sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      color: #999;
-      line-height: 1.7;
-      margin-bottom: 32px;
+      font-weight: 400; font-size: 14.5px;
+      color: #8a8a8a; line-height: 1.75;
+      margin-bottom: 28px;
     }
-    .sheet-claim {
-      display: block;
-      width: 100%;
-      height: 52px;
-      background: var(--ember);
-      color: var(--parchment);
+    .sh-claim {
+      display: block; width: 100%; height: 52px;
+      background: var(--ember); color: var(--parchment);
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 0.05em;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s ease;
+      font-weight: 800; font-size: 17px; letter-spacing: 0.06em;
+      border: none; border-radius: 4px; cursor: pointer;
+      transition: background 0.18s ease, transform 0.1s ease;
+      position: relative; overflow: hidden;
     }
-    .sheet-claim:hover {
-      background: #c0001a;
+    .sh-claim::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent);
     }
-    .sheet-close {
-      display: block;
-      margin: 16px auto 0;
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: #555;
-      background: none;
-      border: none;
-      cursor: pointer;
-      transition: color 0.2s ease;
+    .sh-claim:hover { background: #c5001a; }
+    .sh-claim:active { transform: scale(0.98); }
+    .sh-claim:disabled { opacity: 0.35; cursor: default; }
+    .sh-close {
+      display: block; margin: 14px auto 0;
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: #3a3a3a; background: none; border: none; cursor: pointer;
+      letter-spacing: 0.14em; transition: color 0.2s ease;
     }
-    .sheet-close:hover { color: var(--parchment); }
+    .sh-close:hover { color: var(--parchment); }
 
+    /* desktop: centered card */
     @media (min-width: 768px) {
       #sheet {
-        top: 50%;
-        left: 50%;
-        right: auto;
-        bottom: auto;
-        width: 480px;
-        transform: translate(-50%, -40%);
-        border-radius: 8px;
-        border: 1px solid var(--smoke);
-        border-top: 1px solid var(--smoke);
+        top: 50%; left: 50%; right: auto; bottom: auto;
+        width: min(500px, 90vw);
+        border: 1px solid var(--smoke); border-radius: 10px;
+        transform: translate(-50%, -44%);
         opacity: 0;
-        transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+        transition: opacity 0.3s ease, transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+        padding: 28px 28px 32px;
       }
-      #sheet.active {
-        transform: translate(-50%, -50%);
-        opacity: 1;
-      }
-      .sheet-handle { display: none; }
+      #sheet.on { transform: translate(-50%, -50%); opacity: 1; }
+      .sh-handle { display: none; }
+      .sh-name { font-size: 44px; }
     }
 
-    /* ─── TOAST ─────────────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       TOAST
+    ══════════════════════════════════════════ */
     #toast {
-      position: fixed;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #0F0F0F;
+      position: fixed; top: 68px; left: 50%;
+      transform: translateX(-50%) translateY(-6px);
+      background: #0C0C0C;
       border: 1px solid var(--ember);
-      border-radius: 4px;
-      padding: 12px 20px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      color: var(--parchment);
-      z-index: 400;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-      white-space: nowrap;
+      border-radius: 4px; padding: 11px 20px;
+      font-family: 'DM Mono', monospace; font-size: 11px;
+      color: var(--parchment); letter-spacing: 0.04em;
+      z-index: 400; opacity: 0;
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      pointer-events: none; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
-    #toast.visible {
+    #toast.on {
       opacity: 1;
+      transform: translateX(-50%) translateY(0);
     }
-
     @media (min-width: 768px) {
-      #toast {
-        top: 76px;
-        left: auto;
-        right: 20px;
-        transform: none;
-      }
+      #toast { left: auto; right: 20px; transform: translateY(-6px); }
+      #toast.on { transform: translateY(0); }
     }
 
-    /* ─── COMPLETION SCREEN ─────────────────────────────────── */
-    #completion {
-      position: fixed;
-      inset: 0;
+    /* ══════════════════════════════════════════
+       COMPLETION SCREEN
+    ══════════════════════════════════════════ */
+    #complete {
+      position: fixed; inset: 0;
       background: var(--void);
-      z-index: 600;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.8s ease;
+      z-index: 700;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 32px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.9s ease;
       overflow: hidden;
     }
-    #completion.active {
-      opacity: 1;
-      pointer-events: all;
+    #complete.on { opacity: 1; pointer-events: all; }
+    .cpl-eyebrow {
+      font-family: 'DM Mono', monospace; font-size: 10px;
+      color: #444; letter-spacing: 0.28em; text-transform: uppercase;
+      margin-bottom: 20px;
     }
-    .completion-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      color: #555;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 24px;
+    .cpl-title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(64px, 14vw, 96px);
+      color: var(--parchment); text-transform: uppercase; line-height: 0.92;
+      margin-bottom: 8px;
     }
-    .completion-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 64px;
-      color: var(--parchment);
-      text-transform: uppercase;
-      line-height: 1;
+    .cpl-sub {
+      font-family: 'Barlow', sans-serif; font-weight: 400;
+      font-size: 14.5px; color: #555; line-height: 1.65;
+      max-width: 300px; margin: 16px auto 40px;
     }
-    .completion-sub {
-      font-family: 'Barlow', sans-serif;
-      font-weight: 400;
-      font-size: 15px;
-      color: #999;
-      line-height: 1.6;
-      max-width: 320px;
-      margin: 16px auto 40px;
+    .cpl-btn {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 17px; letter-spacing: 0.06em;
+      color: var(--ember); background: transparent;
+      border: 1px solid var(--ember); border-radius: 4px;
+      padding: 15px 44px; cursor: pointer;
+      transition: background 0.22s ease, color 0.22s ease;
     }
-    .completion-cta {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: 0.05em;
-      color: var(--ember);
-      background: transparent;
-      border: 1px solid var(--ember);
-      border-radius: 4px;
-      padding: 16px 40px;
-      cursor: pointer;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-    .completion-cta:hover {
-      background: var(--ember);
-      color: var(--parchment);
+    .cpl-btn:hover { background: var(--ember); color: var(--parchment); }
+    /* scan line overlay for atmosphere */
+    #complete::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        to bottom, transparent 0px, transparent 2px,
+        rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 3px
+      );
+      pointer-events: none;
     }
 
-    @media (min-width: 768px) {
-      .completion-title { font-size: 96px; }
-    }
-
-    /* ─── REDUCED MOTION ────────────────────────────────────── */
+    /* ══════════════════════════════════════════
+       REDUCED MOTION
+    ══════════════════════════════════════════ */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -907,356 +753,409 @@
 </head>
 <body>
 
-  <!-- Progress Bar -->
-  <div id="progress-bar-wrap">
-    <div id="progress-bar"></div>
+<!-- Progress -->
+<div id="progress-track"><div id="progress-fill"></div></div>
+
+<!-- Header -->
+<header id="header">
+  <div id="logo">
+    <div id="logo-word">
+      <span id="logo-echo">Echo</span><span id="logo-vault">VAULT</span>
+    </div>
+    <span id="logo-sub">echovault.games</span>
+  </div>
+  <div id="header-right">
+    <span id="session-info">SESSION 001</span>
+    <span id="echo-counter">ECHOES 0/8</span>
+  </div>
+</header>
+
+<!-- Intro -->
+<div id="intro">
+  <div id="intro-scan"></div>
+  <div id="intro-wrap">
+    <div id="intro-border"></div>
+    <h1 id="intro-hl"></h1>
+    <p id="intro-tagline">London, 1970s. The room holds what the stage cannot.</p>
+    <p id="intro-year">A haunted collection — enter carefully.</p>
+  </div>
+  <button id="intro-skip">[ Skip Intro ]</button>
+</div>
+
+<!-- Room -->
+<div id="room">
+  <div id="wall"></div>
+  <div id="light"></div>
+  <div id="shadow-l"></div>
+  <div id="shadow-r"></div>
+  <div id="floor"></div>
+  <div id="baseboard"></div>
+
+  <!-- 1 — Mirror -->
+  <div class="obj" id="obj-mirror" data-id="0">
+    <div class="mirror"></div>
+    <span class="obj-name">Mirror</span>
   </div>
 
-  <!-- Header -->
-  <header id="header">
-    <div id="logo">
-      <div id="logo-wordmark">
-        <span id="logo-echo">Echo</span>
-        <span id="logo-vault">VAULT</span>
-      </div>
-      <span id="logo-url">echovault.games</span>
-    </div>
-    <div id="header-right">
-      <span id="echo-counter">ECHOES 0/8</span>
-      <button id="wallet-btn">[ CONNECT ]</button>
-    </div>
-  </header>
-
-  <!-- Intro Sequence -->
-  <div id="intro">
-    <div id="intro-line"></div>
-    <div id="intro-content">
-      <div id="intro-box"></div>
-      <h1 id="intro-headline"></h1>
-      <p id="intro-sub">London, 1970s. The room holds what the stage cannot.</p>
-    </div>
-    <button id="intro-skip">[ Skip Intro ]</button>
-  </div>
-
-  <!-- Room -->
-  <div id="room">
-    <div id="room-bg"></div>
-    <div id="room-light"></div>
-    <div id="room-floor"></div>
-    <div id="room-baseboard"></div>
-
-    <!-- 1. Round Mirror -->
-    <div class="object" id="obj-mirror" data-id="0">
-      <div class="mirror-circle"></div>
-      <span class="obj-label">Mirror</span>
-    </div>
-
-    <!-- 2. Vanity Table -->
-    <div class="object" id="obj-vanity" data-id="6">
-      <div class="vanity-body"></div>
+  <!-- 2 — Vanity Table -->
+  <div class="obj" id="obj-vanity" data-id="6">
+    <div class="vanity">
+      <div class="vanity-top"></div>
+      <div class="vanity-surface"></div>
       <div class="vanity-legs">
         <div class="vanity-leg"></div>
         <div class="vanity-leg"></div>
         <div class="vanity-leg"></div>
         <div class="vanity-leg"></div>
       </div>
-      <span class="obj-label">Vanity</span>
     </div>
+    <span class="obj-name">Vanity</span>
+  </div>
 
-    <!-- 3. Leather Jacket -->
-    <div class="object" id="obj-jacket" data-id="1">
-      <div class="jacket-shape"></div>
-      <span class="obj-label">Jacket</span>
+  <!-- 3 — Leather Jacket -->
+  <div class="obj" id="obj-jacket" data-id="1">
+    <div class="jacket">
+      <div class="jacket-body"></div>
+      <div class="jacket-collar-l"></div>
+      <div class="jacket-collar-r"></div>
+      <div class="jacket-zip"></div>
     </div>
+    <span class="obj-name">Jacket</span>
+  </div>
 
-    <!-- 4. Vinyl Record -->
-    <div class="object" id="obj-vinyl" data-id="2">
-      <div class="vinyl-disc"></div>
-      <span class="obj-label">Vinyl</span>
+  <!-- 4 — Vinyl -->
+  <div class="obj" id="obj-vinyl" data-id="2">
+    <div class="vinyl"></div>
+    <span class="obj-name">Vinyl</span>
+  </div>
+
+  <!-- 5 — Setlist -->
+  <div class="obj" id="obj-setlist" data-id="3">
+    <div class="setlist"><div class="setlist-line"></div></div>
+    <span class="obj-name">Setlist</span>
+  </div>
+
+  <!-- 6 — Polaroid -->
+  <div class="obj" id="obj-polaroid" data-id="4">
+    <div class="polaroid">
+      <div class="polaroid-img"></div>
+      <div class="polaroid-text">74 / BACKSTAGE</div>
     </div>
+    <span class="obj-name">Polaroid</span>
+  </div>
 
-    <!-- 5. Setlist Paper -->
-    <div class="object" id="obj-setlist" data-id="3">
-      <div class="setlist-paper"></div>
-      <span class="obj-label">Setlist</span>
-    </div>
-
-    <!-- 6. Polaroid Photo -->
-    <div class="object" id="obj-polaroid" data-id="4">
-      <div class="polaroid-frame">
-        <div class="polaroid-inner"></div>
+  <!-- 7 — Cassette -->
+  <div class="obj" id="obj-cassette" data-id="5">
+    <div class="cassette">
+      <div class="cassette-label">
+        <span class="cassette-label-text">ROUGH MIX B</span>
       </div>
-      <span class="obj-label">Polaroid</span>
     </div>
-
-    <!-- 7. Cassette Tape -->
-    <div class="object" id="obj-cassette" data-id="5">
-      <div class="cassette-body">
-        <div class="cassette-label"></div>
-      </div>
-      <span class="obj-label">Cassette</span>
-    </div>
-
-    <!-- 8. Star Door Sign -->
-    <div class="object" id="obj-star" data-id="7">
-      <span class="star-icon">★</span>
-      <span class="star-label-text">Dressing Room</span>
-      <span class="obj-label">Star Sign</span>
-    </div>
-
-    <!-- Hint text -->
-    <span id="hint">— touch the artifacts to collect echoes —</span>
+    <span class="obj-name">Cassette</span>
   </div>
 
-  <!-- Modal overlay -->
-  <div id="overlay"></div>
-
-  <!-- Bottom sheet / modal -->
-  <div id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-number" id="sheet-number"></div>
-    <div class="sheet-name" id="sheet-name"></div>
-    <div class="sheet-divider"></div>
-    <p class="sheet-text" id="sheet-text"></p>
-    <button class="sheet-claim" id="sheet-claim">CLAIM THIS ECHO</button>
-    <button class="sheet-close" id="sheet-close">close</button>
+  <!-- 8 — Star Sign -->
+  <div class="obj" id="obj-star" data-id="7">
+    <div class="star-wrap">
+      <span class="star-symbol">★</span>
+      <div class="star-tag">Dressing Room</div>
+    </div>
+    <span class="obj-name">Star Sign</span>
   </div>
 
-  <!-- Toast -->
-  <div id="toast">Echo claimed. Connect wallet to mint.</div>
+  <span id="hint">— hover an artifact to examine it —</span>
+</div>
 
-  <!-- Completion Screen -->
-  <div id="completion">
-    <p class="completion-label">All Echoes Recovered</p>
-    <div class="completion-title">THE VAULT<br>IS OPEN.</div>
-    <p class="completion-sub">You've uncovered every artifact in this room. The archive is complete.</p>
-    <button class="completion-cta">MINT YOUR COLLECTION</button>
-  </div>
+<!-- Overlay -->
+<div id="overlay"></div>
 
-  <script>
-    const ARTIFACTS = [
-      { id: 1, name: "THE ROUND MIRROR",   number: "01", text: "Every reflection holds a version of the truth. This mirror witnessed transformations no camera ever captured. What it shows you now depends entirely on who you believe yourself to be." },
-      { id: 2, name: "THE LEATHER JACKET", number: "02", text: "Worn under ten thousand lights. The smell of smoke and stage fog still lingers in the lining. It was never washed — some things are too important to clean." },
-      { id: 3, name: "THE VINYL RECORD",   number: "03", text: "Side B, Track 3. Never officially released. Only three copies exist in the world, and one of them is right here, in this room, spinning slowly toward you." },
-      { id: 4, name: "THE SETLIST",         number: "04", text: "Scrawled in blue ink, crossed out twice, rewritten once. The encore was never planned — it was felt. The crowd pulled it out of him before he knew it was happening." },
-      { id: 5, name: "THE POLAROID",        number: "05", text: "Taken backstage, summer of 1974. The person standing on the left has never been identified. Three researchers have tried. All three eventually stopped looking." },
-      { id: 6, name: "THE CASSETTE",        number: "06", text: "A rough mix recorded in twenty minutes between soundcheck and doors. Some who've heard both versions say this one is better. The label disagreed. The label was wrong." },
-      { id: 7, name: "THE VANITY TABLE",    number: "07", text: "Fourteen products. One ritual. The transformation always began here, in silence, before the armor went on. The mirror remembers every face that sat before it." },
-      { id: 8, name: "THE STAR SIGN",       number: "08", text: "The red star meant do not disturb. Security enforced it without exception — for everyone except the one person who never knocked. No one knows who that was." }
-    ];
+<!-- Sheet / Modal -->
+<div id="sheet">
+  <div class="sh-handle"></div>
+  <div class="sh-artifact-no" id="sh-no"></div>
+  <div class="sh-name" id="sh-name"></div>
+  <div class="sh-rule"></div>
+  <p class="sh-text" id="sh-text"></p>
+  <button class="sh-claim" id="sh-claim">CLAIM THIS ECHO</button>
+  <button class="sh-close" id="sh-close">close</button>
+</div>
 
-    let foundSet = new Set();
-    let activeArtifactId = null;
+<!-- Toast -->
+<div id="toast">Echo claimed. ✦ 1 artifact recovered.</div>
 
-    /* ─── PARTICLES ─────────────────────────── */
-    function spawnParticles() {
-      const room = document.getElementById('room');
-      for (let i = 0; i < 12; i++) {
-        const p = document.createElement('div');
-        p.className = 'particle';
-        const x = Math.random() * 100;
-        const bottom = Math.random() * 30;
-        const dur = 15 + Math.random() * 10;
-        const delay = Math.random() * 8;
-        const opacity = 0.15 + Math.random() * 0.20;
-        p.style.cssText = `left:${x}%;bottom:${bottom}%;opacity:${opacity};animation:particle-rise ${dur}s ${delay}s linear infinite;`;
-        room.appendChild(p);
-      }
-      // inject particle keyframe
-      const style = document.createElement('style');
-      style.textContent = `@keyframes particle-rise{0%{transform:translateY(0);}100%{transform:translateY(-100vh);}}`;
-      document.head.appendChild(style);
-    }
+<!-- Completion -->
+<div id="complete">
+  <p class="cpl-eyebrow">All Echoes Recovered</p>
+  <div class="cpl-title">THE VAULT<br>IS OPEN.</div>
+  <p class="cpl-sub">You've uncovered every artifact in this room. The archive is complete. Nothing remains hidden.</p>
+  <button class="cpl-btn">VIEW YOUR COLLECTION</button>
+</div>
 
-    /* ─── INTRO SEQUENCE ────────────────────── */
-    function startIntro() {
-      const intro    = document.getElementById('intro');
-      const line     = document.getElementById('intro-line');
-      const content  = document.getElementById('intro-content');
-      const headline = document.getElementById('intro-headline');
-      const sub      = document.getElementById('intro-sub');
-      const box      = document.getElementById('intro-box');
-      const skip     = document.getElementById('intro-skip');
-      const text     = "IT'S THE ENCORE.";
-      let cancelled  = false;
+<script>
+/* ══════════════════════════════════════════
+   DATA
+══════════════════════════════════════════ */
+const ARTIFACTS = [
+  { id:1, name:"THE ROUND MIRROR",   no:"ARTIFACT NO. 01", text:"Every reflection holds a version of the truth. This mirror witnessed transformations no camera ever captured. What it shows you now depends entirely on who you believe yourself to be." },
+  { id:2, name:"THE LEATHER JACKET", no:"ARTIFACT NO. 02", text:"Worn under ten thousand lights. The smell of smoke and stage fog still lingers in the lining. It was never washed — some things are too important to clean." },
+  { id:3, name:"THE VINYL RECORD",   no:"ARTIFACT NO. 03", text:"Side B, Track 3. Never officially released. Only three copies exist in the world, and one of them is right here, spinning slowly toward you." },
+  { id:4, name:"THE SETLIST",        no:"ARTIFACT NO. 04", text:"Scrawled in blue ink, crossed out twice, rewritten once. The encore was never planned — it was felt. The crowd pulled it out of him before he knew it was happening." },
+  { id:5, name:"THE POLAROID",       no:"ARTIFACT NO. 05", text:"Taken backstage, summer of 1974. The person standing on the left has never been identified. Three researchers have tried. All three eventually stopped looking." },
+  { id:6, name:"THE CASSETTE",       no:"ARTIFACT NO. 06", text:"A rough mix recorded in twenty minutes between soundcheck and doors. Some who've heard both versions say this one is better. The label disagreed. The label was wrong." },
+  { id:7, name:"THE VANITY TABLE",   no:"ARTIFACT NO. 07", text:"Fourteen products. One ritual. The transformation always began here, in silence, before the armor went on. The mirror remembers every face that sat before it." },
+  { id:8, name:"THE STAR SIGN",      no:"ARTIFACT NO. 08", text:"The red star meant do not disturb. Security enforced it without exception — for everyone except the one person who never knocked. No one knows who that was." }
+];
 
-      function revealRoom() {
-        intro.style.transition = 'opacity 0.8s ease';
-        intro.style.opacity    = '0';
-        setTimeout(() => {
-          intro.style.display = 'none';
-          document.getElementById('room').classList.add('visible');
-        }, 800);
-      }
+let found = new Set();
+let activeId = null;
 
-      skip.addEventListener('click', () => {
-        cancelled = true;
-        revealRoom();
-      });
+/* ══════════════════════════════════════════
+   DUST PARTICLES
+══════════════════════════════════════════ */
+(function spawnDust() {
+  const room = document.getElementById('room');
+  const style = document.createElement('style');
+  style.textContent = `@keyframes dust-rise{0%{transform:translateY(0) translateX(0);}50%{transform:translateY(-50vh) translateX(8px);}100%{transform:translateY(-100vh) translateX(-4px);opacity:0;}}`;
+  document.head.appendChild(style);
+  for (let i = 0; i < 14; i++) {
+    const d = document.createElement('div');
+    d.className = 'dust';
+    const sz = Math.random() > 0.5 ? 2 : 1;
+    const x = Math.random() * 100;
+    const bottom = Math.random() * 40;
+    const dur = 16 + Math.random() * 12;
+    const delay = Math.random() * 10;
+    const op = 0.1 + Math.random() * 0.2;
+    d.style.cssText = `width:${sz}px;height:${sz}px;left:${x}%;bottom:${bottom}%;opacity:${op};animation:dust-rise ${dur}s ${delay}s ease-in infinite;`;
+    room.appendChild(d);
+  }
+})();
 
-      // Beat 1: red line
-      setTimeout(() => {
-        if (cancelled) return;
-        line.style.transition = 'width 0.7s ease';
-        line.style.width = '100%';
-      }, 500);
+/* ══════════════════════════════════════════
+   INTRO
+══════════════════════════════════════════ */
+(function intro() {
+  const introEl  = document.getElementById('intro');
+  const scan     = document.getElementById('intro-scan');
+  const wrap     = document.getElementById('intro-wrap');
+  const border   = document.getElementById('intro-border');
+  const hl       = document.getElementById('intro-hl');
+  const tagline  = document.getElementById('intro-tagline');
+  const year     = document.getElementById('intro-year');
+  const skipBtn  = document.getElementById('intro-skip');
+  const room     = document.getElementById('room');
+  let done = false;
 
-      // Beat 2: headline
-      setTimeout(() => {
-        if (cancelled) return;
-        content.style.opacity = '1';
-        text.split('').forEach((ch, i) => {
-          const span = document.createElement('span');
-          span.textContent = ch === ' ' ? '\u00A0' : ch;
-          headline.appendChild(span);
-          setTimeout(() => {
-            if (!cancelled) span.classList.add('visible');
-          }, i * 40);
-        });
-      }, 1200);
+  function reveal() {
+    if (done) return;
+    done = true;
+    introEl.style.transition = 'opacity 0.9s ease';
+    introEl.style.opacity = '0';
+    setTimeout(() => {
+      introEl.style.display = 'none';
+      room.classList.add('on');
+    }, 900);
+  }
 
-      // Beat 3: sub text
-      setTimeout(() => {
-        if (cancelled) return;
-        sub.classList.add('visible');
-      }, 2500);
+  skipBtn.addEventListener('click', reveal);
 
-      // Beat 4: box
-      setTimeout(() => {
-        if (cancelled) return;
-        box.classList.add('visible');
-      }, 3500);
+  // Beat 1 — scan line
+  setTimeout(() => {
+    if (done) return;
+    scan.style.transition = 'width 0.75s ease';
+    scan.style.width = '100%';
+  }, 400);
 
-      // Beat 5: fade out
-      setTimeout(() => {
-        if (cancelled) return;
-        revealRoom();
-      }, 4500);
-    }
-
-    /* ─── MODAL LOGIC ───────────────────────── */
-    function openSheet(artifactIdx) {
-      const artifact = ARTIFACTS[artifactIdx];
-      activeArtifactId = artifactIdx;
-      document.getElementById('sheet-number').textContent = `ARTIFACT NO. ${artifact.number}`;
-      document.getElementById('sheet-name').textContent   = artifact.name;
-      document.getElementById('sheet-text').textContent   = artifact.text;
-
-      const claim = document.getElementById('sheet-claim');
-      const alreadyFound = foundSet.has(artifactIdx);
-      claim.textContent = alreadyFound ? 'ALREADY CLAIMED' : 'CLAIM THIS ECHO';
-      claim.disabled    = alreadyFound;
-      claim.style.opacity = alreadyFound ? '0.4' : '1';
-
-      document.getElementById('overlay').classList.add('active');
-      document.getElementById('sheet').classList.add('active');
-    }
-
-    function closeSheet() {
-      document.getElementById('overlay').classList.remove('active');
-      document.getElementById('sheet').classList.remove('active');
-      activeArtifactId = null;
-    }
-
-    document.getElementById('overlay').addEventListener('click', closeSheet);
-    document.getElementById('sheet-close').addEventListener('click', closeSheet);
-
-    /* ─── CLAIM ─────────────────────────────── */
-    document.getElementById('sheet-claim').addEventListener('click', () => {
-      if (activeArtifactId === null || foundSet.has(activeArtifactId)) return;
-
-      foundSet.add(activeArtifactId);
-
-      // mark object as found
-      document.querySelectorAll('.object').forEach(el => {
-        if (parseInt(el.dataset.id) === activeArtifactId) {
-          el.classList.add('found');
-        }
-      });
-
-      closeSheet();
-      showToast();
-      updateCounter();
-
-      if (foundSet.size === 8) {
-        setTimeout(showCompletion, 1000);
-      }
+  // Beat 2 — headline letters
+  setTimeout(() => {
+    if (done) return;
+    wrap.style.opacity = '1';
+    const text = "IT'S THE ENCORE.";
+    text.split('').forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.textContent = ch === ' ' ? '\u00A0' : ch;
+      hl.appendChild(s);
+      setTimeout(() => { if (!done) s.classList.add('on'); }, i * 42);
     });
+  }, 1100);
 
-    /* ─── COUNTER ───────────────────────────── */
-    function updateCounter() {
-      const n       = foundSet.size;
-      const counter = document.getElementById('echo-counter');
-      counter.textContent = `ECHOES ${n}/8`;
-      counter.classList.remove('pulse');
-      void counter.offsetWidth; // reflow
-      counter.classList.add('pulse');
-      document.getElementById('progress-bar').style.width = `calc(${n}/8 * 100%)`;
+  // Beat 3 — tagline
+  setTimeout(() => {
+    if (done) return;
+    tagline.classList.add('on');
+  }, 2400);
+
+  // Beat 3b — year line
+  setTimeout(() => {
+    if (done) return;
+    year.classList.add('on');
+  }, 2900);
+
+  // Beat 4 — border
+  setTimeout(() => {
+    if (done) return;
+    border.classList.add('on');
+  }, 3400);
+
+  // Beat 5 — reveal room
+  setTimeout(reveal, 5000);
+})();
+
+/* ══════════════════════════════════════════
+   MODAL
+══════════════════════════════════════════ */
+function openSheet(idx) {
+  const a = ARTIFACTS[idx];
+  activeId = idx;
+  document.getElementById('sh-no').textContent   = a.no;
+  document.getElementById('sh-name').textContent = a.name;
+  document.getElementById('sh-text').textContent = a.text;
+
+  const btn = document.getElementById('sh-claim');
+  const already = found.has(idx);
+  btn.textContent = already ? 'ALREADY CLAIMED' : 'CLAIM THIS ECHO';
+  btn.disabled    = already;
+
+  document.getElementById('overlay').classList.add('on');
+  document.getElementById('sheet').classList.add('on');
+
+  // prevent body scroll if needed (mobile)
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSheet() {
+  document.getElementById('overlay').classList.remove('on');
+  document.getElementById('sheet').classList.remove('on');
+  document.body.style.overflow = '';
+  activeId = null;
+}
+
+document.getElementById('overlay').addEventListener('click', closeSheet);
+document.getElementById('sh-close').addEventListener('click', closeSheet);
+
+// swipe down to dismiss on mobile
+(function swipeDismiss() {
+  const sh = document.getElementById('sheet');
+  let startY = 0;
+  sh.addEventListener('touchstart', e => { startY = e.touches[0].clientY; }, { passive: true });
+  sh.addEventListener('touchend', e => {
+    const dy = e.changedTouches[0].clientY - startY;
+    if (dy > 70) closeSheet();
+  }, { passive: true });
+})();
+
+/* ══════════════════════════════════════════
+   CLAIM
+══════════════════════════════════════════ */
+document.getElementById('sh-claim').addEventListener('click', () => {
+  if (activeId === null || found.has(activeId)) return;
+
+  found.add(activeId);
+
+  // mark DOM object
+  document.querySelectorAll('.obj').forEach(el => {
+    if (parseInt(el.dataset.id) === activeId) {
+      setTimeout(() => el.classList.add('found'), 200);
     }
+  });
 
-    /* ─── TOAST ─────────────────────────────── */
-    let toastTimer = null;
-    function showToast() {
-      const toast = document.getElementById('toast');
-      toast.classList.add('visible');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        toast.style.transition = 'opacity 0.5s ease';
-        toast.style.opacity = '0';
-        setTimeout(() => {
-          toast.classList.remove('visible');
-          toast.style.opacity = '';
-        }, 500);
-      }, 3000);
-    }
+  closeSheet();
+  showToast(found.size);
+  updateCounter();
 
-    /* ─── COMPLETION ────────────────────────── */
-    function showCompletion() {
-      const el = document.getElementById('completion');
-      el.classList.add('active');
-      burstParticles();
-    }
+  if (found.size === 8) setTimeout(showComplete, 1200);
+});
 
-    function burstParticles() {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const styleEl = document.createElement('style');
-      document.head.appendChild(styleEl);
+/* ══════════════════════════════════════════
+   COUNTER + PROGRESS
+══════════════════════════════════════════ */
+function updateCounter() {
+  const n = found.size;
+  const el = document.getElementById('echo-counter');
+  el.textContent = `ECHOES ${n}/8`;
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+  document.getElementById('progress-fill').style.width = `${(n/8)*100}%`;
+}
 
-      for (let i = 0; i < 40; i++) {
-        const angle  = (i / 40) * Math.PI * 2;
-        const dist   = 80 + Math.random() * 200;
-        const tx     = Math.cos(angle) * dist;
-        const ty     = Math.sin(angle) * dist;
-        const kfName = `burst${i}`;
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+let toastTimer = null;
+function showToast(n) {
+  const t = document.getElementById('toast');
+  const remaining = 8 - n;
+  t.textContent = remaining > 0
+    ? `Echo claimed. ✦ ${remaining} artifact${remaining === 1 ? '' : 's'} remain.`
+    : 'All echoes recovered. The vault stirs.';
 
-        styleEl.sheet.insertRule(`@keyframes ${kfName}{0%{transform:translate(0,0);opacity:1;}100%{transform:translate(${tx}px,${ty}px);opacity:0;}}`, styleEl.sheet.cssRules.length);
+  t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.classList.remove('on');
+  }, 3200);
+}
 
-        const p   = document.createElement('div');
-        p.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;width:3px;height:3px;background:#E8001C;border-radius:50%;z-index:700;animation:${kfName} 1.2s ease forwards;pointer-events:none;`;
-        document.body.appendChild(p);
-        setTimeout(() => p.remove(), 1300);
-      }
-    }
+/* ══════════════════════════════════════════
+   COMPLETION
+══════════════════════════════════════════ */
+function showComplete() {
+  document.getElementById('complete').classList.add('on');
+  particleBurst();
+}
 
-    /* ─── WALLET CONNECT ────────────────────── */
-    document.getElementById('wallet-btn').addEventListener('click', function() {
-      if (this.classList.contains('connected')) return;
-      this.classList.add('connected');
-      this.textContent = '[ 0x1f...4a2e ]';
-    });
+function particleBurst() {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const styleEl = document.createElement('style');
+  document.head.appendChild(styleEl);
 
-    /* ─── OBJECT CLICK HANDLERS ─────────────── */
-    document.querySelectorAll('.object').forEach(el => {
-      el.addEventListener('click', () => {
-        const idx = parseInt(el.dataset.id);
-        openSheet(idx);
-      });
-    });
+  for (let i = 0; i < 48; i++) {
+    const angle  = (i / 48) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const dist   = 60 + Math.random() * 220;
+    const tx     = Math.cos(angle) * dist;
+    const ty     = Math.sin(angle) * dist;
+    const name   = `burst${i}_${Date.now()}`;
 
-    /* ─── BOOT ──────────────────────────────── */
-    spawnParticles();
-    startIntro();
-  </script>
+    try {
+      styleEl.sheet.insertRule(
+        `@keyframes ${name}{0%{transform:translate(0,0) scale(1);opacity:1;}100%{transform:translate(${tx}px,${ty}px) scale(0);opacity:0;}}`,
+        styleEl.sheet.cssRules.length
+      );
+    } catch(e) {}
+
+    const p = document.createElement('div');
+    const sz = 2 + Math.random() * 2;
+    p.style.cssText = `
+      position:fixed;left:${cx}px;top:${cy}px;
+      width:${sz}px;height:${sz}px;
+      background:${Math.random()>0.4?'#E8001C':'#F0EBE1'};
+      border-radius:50%;z-index:800;
+      animation:${name} ${0.9+Math.random()*0.5}s ease forwards;
+      pointer-events:none;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1600);
+  }
+}
+
+/* ══════════════════════════════════════════
+   OBJECT CLICKS
+══════════════════════════════════════════ */
+document.querySelectorAll('.obj').forEach(el => {
+  el.addEventListener('click', () => {
+    const idx = parseInt(el.dataset.id);
+    openSheet(idx);
+  });
+});
+
+/* ══════════════════════════════════════════
+   KEYBOARD ESC
+══════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSheet();
+});
+</script>
 </body>
 </html>
